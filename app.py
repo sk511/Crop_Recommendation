@@ -38,5 +38,22 @@ def predict_api():
     # return jsonify(output[0])
     return convert(output[0])
 
+@app.route('/predict',methods=['POST'])
+def predict():
+    input=[float(x) for x in request.form.values()]
+    input=[input]
+    print(input)
+
+    # Specify column names (optional)
+    columns = ['N', 'P', 'K','temperature','humidity','ph','rainfall']
+
+    # Create a DataFrame
+    df = pd.DataFrame(input, columns=columns)
+    print(df)
+
+    output=model.predict(df)
+    str=convert(output[0])
+    return render_template('home.html',prediction_text="According to the data provided, the suggested crop is "+ str)
+
 if __name__=="__main__":
     app.run(debug=True)
